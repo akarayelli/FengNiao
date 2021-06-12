@@ -135,4 +135,23 @@ do {
 
 let size = unusedFiles.reduce(0) { $0 + $1.size }.fn_readableSize
 print("\(unusedFiles.count) gereksiz dosya(\(size)) bulundu." )
+let out = "\(unusedFiles.count) gereksiz dosya(\(size)) bulundu."
+shell("envman add --key UNUSED_FILE_OUTPUT --value \(out)")
 exit(EX_OK)
+
+
+func shell(_ command: String) -> String {
+    let task = Process()
+    let pipe = Pipe()
+    
+    task.standardOutput = pipe
+    task.standardError = pipe
+    task.arguments = ["-c", command]
+    task.launchPath = "/bin/zsh"
+    task.launch()
+    
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(data: data, encoding: .utf8)!
+    
+    return output
+}
