@@ -135,7 +135,7 @@ let fengNiao = FengNiao(projectPath: projectPath,
 let unusedFiles: [FileInfo]
 
 do {
-    print("Searching unused file. This may take a while...")
+    //print("Searching unused file. This may take a while...")
     unusedFiles = try fengNiao.unusedFiles()
 } catch {
     guard let e = error as? FengNiaoError else {

@@ -35,7 +35,8 @@ public enum Action {
 
 public func promptResult(files: [FileInfo], disableAction: Bool) -> Action {
     let size = files.reduce(0) { $0 + $1.size }.fn_readableSize
-    print("\(files.count) unused files are found. Total Size: \(size)".yellow.bold)
+    print("\(files.count)" )
+    //print("\(files.count) unused files are found. Total Size: \(size)".yellow.bold)
     
     if disableAction {
         return .ignore
