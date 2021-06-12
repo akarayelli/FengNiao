@@ -53,21 +53,6 @@ let projectPathOption = StringOption(
     helpMessage: "Root path of your Xcode project. Default is current folder.")
 cli.addOption(projectPathOption)
 
-let slackToken = StringOption(
-    longFlag: "slackToken",
-    helpMessage: "Token value for slack")
-cli.addOption(slackToken)
-
-let isForceOption = BoolOption(
-    longFlag: "force",
-    helpMessage: "Delete the found unused files without asking.")
-cli.addOption(isForceOption)
-
-let isDisableAction = BoolOption(
-    longFlag: "justInform",
-    helpMessage: "Just informs result without asking.")
-cli.addOption(isDisableAction)
-
 let excludePathOption = MultiStringOption(
     shortFlag: "e", longFlag: "exclude",
     helpMessage: "Exclude paths from search.")
@@ -93,7 +78,7 @@ let versionOption = BoolOption(longFlag: "version", helpMessage: "Print version.
 cli.addOption(versionOption)
 
 let helpOption = BoolOption(shortFlag: "h", longFlag: "help",
-                      helpMessage: "Print this help message.")
+                            helpMessage: "Print this help message.")
 cli.addOption(helpOption)
 
 do {
@@ -121,12 +106,9 @@ if versionOption.value {
 
 
 let projectPath = projectPathOption.value ?? "."
-let isForce = isForceOption.value
-let justInform = isDisableAction.value
 let excludePaths = excludePathOption.value ?? []
 let resourceExtentions = resourceExtOption.value ?? ["imageset", "jpg", "png", "gif", "pdf"]
 let fileExtensions = fileExtOption.value ?? ["h", "m", "mm", "swift", "xib", "storyboard", "plist"]
-let slackBotToken = slackToken.value ?? ""
 let fengNiao = FengNiao(projectPath: projectPath,
                         excludedPaths: excludePaths,
                         resourceExtensions: resourceExtentions,
@@ -151,54 +133,6 @@ do {
     exit(EX_USAGE)
 }
 
-if unusedFiles.isEmpty {
-    print("😎 Hu, you have no unused resources in path: \(Path(projectPath).absolute()).".green.bold)
-    exit(EX_OK)
-}
-
-if !isForce {
-
-    var result = promptResult(files: unusedFiles, disableAction: justInform)
-    while result == .list {
-        for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
-            print("\(file.readableSize) \(file.path.string)")
-        }
-        result = promptResult(files: unusedFiles, disableAction: justInform)
-    }
-    
-    switch result {
-    case .list:
-        fatalError()
-    case .delete:
-        break
-    case .ignore:
-        exit(EX_OK)
-    }
-}
-
-print("Deleting unused files...⚙".bold)
-
-let (deleted, failed) = FengNiao.delete(unusedFiles)
-guard failed.isEmpty else {
-    print("\(unusedFiles.count - failed.count) unused files are deleted. But we encountered some error while deleting these \(failed.count) files:".yellow.bold)
-    for (fileInfo, err) in failed {
-        print("\(fileInfo.path.string) - \(err.localizedDescription)")
-    }
-    exit(EX_USAGE)
-}
-
-
-print("\(unusedFiles.count) unused files are deleted.".green.bold)
-
-if !skipProjRefereceCleanOption.value {
-    if let children = try? Path(projectPath).absolute().children(){
-        print("Now Deleting unused Reference in project.pbxproj...⚙".bold)
-        for path in children {
-            if path.lastComponent.hasSuffix("xcodeproj"){
-                let pbxproj = path + "project.pbxproj"
-                FengNiao.deleteReference(projectFilePath: pbxproj, deletedFiles: deleted)
-            }
-        }
-        print("Unused Reference deleted successfully.".green.bold)
-    }
-}
+let size = unusedFiles.reduce(0) { $0 + $1.size }.fn_readableSize
+print("\(unusedFiles.count) gereksiz dosya(\(size)) bulundu." )
+exit(EX_OK)
