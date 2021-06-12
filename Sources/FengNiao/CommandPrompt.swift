@@ -44,7 +44,7 @@ public func promptResult(files: [FileInfo], disableAction: Bool) -> Action {
     print("What do you want to do with them? (l)ist|(d)elete|(i)gnore".bold, terminator: " ")
     
     guard let result = readLine() else {
-        return promptResult(files: files)
+        return promptResult(files: files, disableAction: disableAction)
     }
     switch result {
     case "l", "L": return .list
