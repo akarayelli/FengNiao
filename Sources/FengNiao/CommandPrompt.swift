@@ -50,6 +50,6 @@ public func promptResult(files: [FileInfo], disableAction: Bool) -> Action {
     case "l", "L": return .list
     case "d", "D": return .delete
     case "i", "I": return .ignore
-    default: return promptResult(files: files)
+    default: return promptResult(files: files, disableAction: disableAction)
     }
 }

@@ -53,6 +53,11 @@ let projectPathOption = StringOption(
     helpMessage: "Root path of your Xcode project. Default is current folder.")
 cli.addOption(projectPathOption)
 
+let slackToken = StringOption(
+    longFlag: "slackToken",
+    helpMessage: "Token value for slack")
+cli.addOption(slackToken)
+
 let isForceOption = BoolOption(
     longFlag: "force",
     helpMessage: "Delete the found unused files without asking.")
@@ -117,17 +122,18 @@ if versionOption.value {
 
 let projectPath = projectPathOption.value ?? "."
 let isForce = isForceOption.value
-let justInform = isDisableAction.value ?? true
+let justInform = isDisableAction.value
 let excludePaths = excludePathOption.value ?? []
 let resourceExtentions = resourceExtOption.value ?? ["imageset", "jpg", "png", "gif", "pdf"]
 let fileExtensions = fileExtOption.value ?? ["h", "m", "mm", "swift", "xib", "storyboard", "plist"]
-
+let slackBotToken = slackToken.value ?? ""
 let fengNiao = FengNiao(projectPath: projectPath,
                         excludedPaths: excludePaths,
                         resourceExtensions: resourceExtentions,
                         searchInFileExtensions: fileExtensions)
 
 let unusedFiles: [FileInfo]
+
 do {
     print("Searching unused file. This may take a while...")
     unusedFiles = try fengNiao.unusedFiles()
@@ -151,12 +157,13 @@ if unusedFiles.isEmpty {
 }
 
 if !isForce {
-    var result = promptResult(files: unusedFiles, disableAction: justInform )
+
+    var result = promptResult(files: unusedFiles, disableAction: justInform)
     while result == .list {
         for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
             print("\(file.readableSize) \(file.path.string)")
         }
-        result = promptResult(files: unusedFiles)
+        result = promptResult(files: unusedFiles, disableAction: justInform)
     }
     
     switch result {
@@ -165,7 +172,6 @@ if !isForce {
     case .delete:
         break
     case .ignore:
-        print("Ignored. Nothing to do, bye!".green.bold)
         exit(EX_OK)
     }
 }
