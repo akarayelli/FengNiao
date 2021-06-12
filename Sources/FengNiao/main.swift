@@ -117,7 +117,7 @@ if versionOption.value {
 
 let projectPath = projectPathOption.value ?? "."
 let isForce = isForceOption.value
-let isDisableAction = isDisableAction.value
+let justInform = isDisableAction.value ?? true
 let excludePaths = excludePathOption.value ?? []
 let resourceExtentions = resourceExtOption.value ?? ["imageset", "jpg", "png", "gif", "pdf"]
 let fileExtensions = fileExtOption.value ?? ["h", "m", "mm", "swift", "xib", "storyboard", "plist"]
@@ -151,7 +151,7 @@ if unusedFiles.isEmpty {
 }
 
 if !isForce {
-    var result = promptResult(files: unusedFiles, disableAction: isDisableAction )
+    var result = promptResult(files: unusedFiles, disableAction: justInform )
     while result == .list {
         for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
             print("\(file.readableSize) \(file.path.string)")
