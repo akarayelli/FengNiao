@@ -134,6 +134,5 @@ do {
 }
 
 let size = unusedFiles.reduce(0) { $0 + $1.size }.fn_readableSize
-print("\(unusedFiles.count) gereksiz dosya(\(size)) bulundu." )
-let out = "\(unusedFiles.count) gereksiz dosya(\(size)) bulundu."
+print("\(unusedFiles.count)(\(size))" )
 exit(EX_OK)
