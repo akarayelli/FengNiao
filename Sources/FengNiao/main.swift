@@ -134,6 +134,16 @@ do {
 }
 
 let size = unusedFiles.reduce(0) { $0 + $1.size }.fn_readableSize
-print("\(unusedFiles.count)(\(size))")
-//let out = "\(unusedFiles.count) gereksiz dosya(\(size)) bulundu."
+
+var subMsg = ""
+let mainMsg = "\(unusedFiles.count) adet kullanılmayan asset(\(size)) bulundu 👀"
+
+//print("\(unusedFiles.count) adet kullanılmayan asset(\(size)) bulundu.")
+
+for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
+    subMsg += "\(file.readableSize) \(file.fileName) \n"
+}
+
+print(mainMsg + "\n" + subMsg)
+
 exit(EX_OK)
