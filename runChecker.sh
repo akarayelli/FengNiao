@@ -9,9 +9,9 @@ then
  echo Gereksiz dosya bulunmuyor 🎉 
  else 
 
-  echo -e $FENGNIAO_OUTPUT | envman --path=./env1.yml add --key UNUSED_ASSET_MESSAGE
+  echo -e $FENGNIAO_OUTPUT | envman add --key UNUSED_ASSET_MESSAGE
   
-  envman --path=./env1.yml run bash -c 'echo -e $UNUSED_ASSET_MESSAGE'
+  envman run bash -c 'echo -e $UNUSED_ASSET_MESSAGE'
 
  fi
 
