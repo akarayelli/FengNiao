@@ -141,9 +141,10 @@ let mainMsg = "\(unusedFiles.count) adet kullanılmayan asset(\(size)) bulundu �
 //print("\(unusedFiles.count) adet kullanılmayan asset(\(size)) bulundu.")
 
 for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
-    subMsg += "\(file.readableSize) \(file.fileName) \n"
+    subMsg += "\(file.readableSize) \(file.fileName)\\\\n"
 }
 
-print(mainMsg + "\n" + subMsg)
+
+print(mainMsg + "\\\\n\\\\n" + subMsg)
 
 exit(EX_OK)
