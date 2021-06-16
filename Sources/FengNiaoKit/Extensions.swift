@@ -69,9 +69,9 @@ extension Int {
         }
         
         if level == 0 {
-            return "\(Int(num))\(fileSizeSuffix[level])"
+            return "\(Int(num)) \(fileSizeSuffix[level])"
         } else {
-            return String(format: "%.2f\(fileSizeSuffix[level])", num)
+            return String(format: "%.2f \(fileSizeSuffix[level])", num)
         }
     }
 }
