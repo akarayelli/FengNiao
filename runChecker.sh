@@ -11,7 +11,7 @@ then
 
  else
 
-  IFS='-'
+  IFS='-delimeter-'
 
   read -a array <<< "$FENGNIAO_OUTPUT"
 
