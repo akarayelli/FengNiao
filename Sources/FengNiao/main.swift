@@ -144,6 +144,6 @@ for file in unusedFiles.sorted(by: { $0.size > $1.size }) {
     subMsg += "(\(file.fileName) \(file.readableSize)) "
 }
 
-print(mainMsg + "-delimeter-[** " +  subMsg + " **]")
+print(mainMsg + "&[** " +  subMsg + " **]")
 
 exit(EX_OK)
